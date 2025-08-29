@@ -7,6 +7,11 @@ compile_pip_requirements(
     requirements_txt = "requirements_lock_3_12.txt",
 )
 
+filegroup(
+    name = "app_db",
+    srcs = ['app.db'],
+)
+
 py_library(
     name = "app_lib",
     srcs = glob(["app/**/*.py"]),
@@ -24,16 +29,18 @@ py_library(
 py_binary(
     name = "app_server",
     main = 'app/main.py',
+    data = [  ':app_db',],
     srcs = ["app/main.py"],
     deps = [
         ":app_lib",
+        
     ],
    imports = ['.'],
 )
 
 py_binary(
     name = "migrate",
-    data = ["alembic.ini", "alembic"],  # ✅ 确保配置文件和迁移脚本目录被打包
+    data = ["alembic.ini", "alembic",],  # ✅ 确保配置文件和迁移脚本目录被打包
 
     main = "tools/alembic_runner.py",
     srcs = ["tools/alembic_runner.py"],
