@@ -29,7 +29,7 @@ py_library(
 py_binary(
     name = "app_server",
     main = 'app/main.py',
-    data = [  ':app_db',],
+    data = [  ],
     srcs = ["app/main.py"],
     deps = [
         ":app_lib",
