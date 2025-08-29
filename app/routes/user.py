@@ -55,6 +55,23 @@ def delete_hero(user_id: int, session: SessionDep):
 
 # Code above omitted 👆
 
+
+# Code above omitted 👆
+
+@router.patch("/users/{user_id}", response_model=User)
+def update_hero(user_id: int, user: User, session: SessionDep):
+    user_db = session.get(User, user_id)
+    if not user_db:
+        raise HTTPException(status_code=404, detail="User not found")
+    user_data = user.model_dump(exclude_unset=True)
+    user_db.sqlmodel_update(user_data)
+    session.add(user_db)
+    session.commit()
+    session.refresh(user_db)
+    return user_db
+
+# Code below omitted 👇
+
 @router.get("/users/{user_id}")
 def read_hero(user_id: int, session: SessionDep) -> User:
     user = session.get(User, user_id)

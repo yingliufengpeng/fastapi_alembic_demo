@@ -1,4 +1,4 @@
-load("@rules_python//python:defs.bzl", "py_library", "py_binary")
+load("@rules_python//python:defs.bzl", "py_library", "py_binary", "py_test")
 load("@rules_python//python:pip.bzl", "compile_pip_requirements")
 
 compile_pip_requirements(
@@ -34,6 +34,13 @@ py_binary(
     ],
    imports = ['.'],
 )
+
+py_test(
+    name = "python_basic_test",
+    srcs = ["tests/python_basic_test.py"],
+    deps = [":basic_lib"],
+)
+
 
 py_binary(
     name = "migrate",
