@@ -1,0 +1,48 @@
+load("@rules_python//python:defs.bzl", "py_library", "py_binary")
+load("@rules_python//python:pip.bzl", "compile_pip_requirements")
+
+compile_pip_requirements(
+    name = "requirements",
+    src = "requirements.txt",
+    requirements_txt = "requirements_lock_3_12.txt",
+)
+
+py_library(
+    name = "app_lib",
+    srcs = glob(["app/**/*.py"]),
+    deps = [
+        "@py_deps//fastapi",  # pip deps
+        "@py_deps//uvicorn",  # pip deps
+        "@py_deps//alembic",  # pip deps
+        "@py_deps//sqlalchemy",  # pip deps
+        "@py_deps//sqlmodel",  # pip deps
+ 
+
+    ],
+
+   imports = ['.'],
+)
+
+py_binary(
+    name = "app_server",
+    main = 'app/main.py',
+    srcs = ["app/main.py"],
+    deps = [
+        ":app_lib",
+    ],
+   imports = ['.'],
+)
+
+py_binary(
+    name = "migrate",
+    data = ["alembic.ini", "alembic"],  # ✅ 确保配置文件和迁移脚本目录被打包
+
+    main = "tools/alembic_runner.py",
+    srcs = ["tools/alembic_runner.py"],
+    deps = [
+        ":app_lib",
+        "@py_deps//alembic",
+        "@py_deps//sqlmodel",
+    ],
+)
+
