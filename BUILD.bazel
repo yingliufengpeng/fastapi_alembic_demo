@@ -7,10 +7,7 @@ compile_pip_requirements(
     requirements_txt = "requirements_lock_3_12.txt",
 )
 
-filegroup(
-    name = "app_db",
-    srcs = ['app.db'],
-)
+ 
 
 py_library(
     name = "app_lib",

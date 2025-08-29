@@ -42,4 +42,26 @@ def create_user(user: User, session: SessionDep) -> None:
     session.refresh(user)
     return user
 
+# Code above omitted 👆
+
+@router.delete("/users/{user_id}")
+def delete_hero(user_id: int, session: SessionDep):
+    user = session.get(User, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    session.delete(user)
+    session.commit()
+    return {"ok": True}
+
+# Code above omitted 👆
+
+@router.get("/users/{user_id}")
+def read_hero(user_id: int, session: SessionDep) -> User:
+    user = session.get(User, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
+
+# Code below omitted 👇
+
 # Code below omitted 👇

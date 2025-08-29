@@ -9,6 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SQLALCHEMY_DATABASE_URL = f"sqlite:///{BASE_DIR / 'app.db'}"
 
 
+
 print(f' sqlite path is {BASE_DIR/"app.db"}' )
 
 # breakpoint()

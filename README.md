@@ -1,7 +1,8 @@
 
 
 <!-- bazel run //:migrate -- revision --autogenerate -m "add email" -->
-bazelisk run //:migrate -- revision  -m "add email"
+bazelisk run //:migrate -- revision --autogenerate    -m "add   v"
+
 bazelisk run //:migrate -- upgrade head
 
 # Windows PowerShell 用：
