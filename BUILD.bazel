@@ -23,6 +23,8 @@ py_library(
 py_binary(
     name = "app_server",
     srcs = ["app/main.py"],
+    args = [
+    ],
     data = [],
     imports = ["."],
     main = "app/main.py",
@@ -31,9 +33,23 @@ py_binary(
     ],
 )
 
+#sh_binary(
+#    name = "sh_app_server",
+#    srcs = ["run_uvicorn.sh"],
+#    data = [
+#        ":app_lib",
+#        ":app_server",
+#    ],
+#)
+
 py_binary(
     name = "demo_server",
     srcs = ["start.py"],
+    args = [
+        "-c",
+        "-k",
+        "--load 8",
+    ],
     data = [],
     imports = ["."],
     main = "start.py",

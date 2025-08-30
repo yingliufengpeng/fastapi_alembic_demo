@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 print(f'xxxxx __file__ is {__file__}')
 import sys 
-print(f'yyyyyyyyyy  {sys.executable}')
+print(f'yyyyyyyyyy  {sys.argv}')
 
 # breakpoint()
 
@@ -17,9 +17,14 @@ app.include_router(user.router)
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("app.main:app", host="0.0.0.0", port=5000, reload=False,
-    
+    uvicorn.run("app.main:app",
+                host="0.0.0.0",
+                port=5000,
+                reload=False,
+                use_colors=True,
+
     )
+
 
 
 

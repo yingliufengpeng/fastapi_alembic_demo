@@ -12,9 +12,6 @@ router = APIRouter()
 
 from app.db import get_session
 
- 
-
-
 SessionDep = Annotated[Session, Depends(get_session)]
 
 
@@ -26,7 +23,7 @@ def read_users(
     offset: int = 0,
     limit: Annotated[int, Query(le=100)] = 100,
 ) -> list[User]:
-    breakpoint()
+
     users = session.exec(select(User).offset(offset).limit(limit)).all()
     return users
 

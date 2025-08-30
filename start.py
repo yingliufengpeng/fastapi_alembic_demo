@@ -1,4 +1,8 @@
+import sys
 
+
+print(f'sys is {sys.executable}')
+print(f"sys's args is {sys.argv}")
 
 i = 0
 
