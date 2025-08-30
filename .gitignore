@@ -6,4 +6,8 @@ bazel-fastapi_alembi_demo/
 bazel-bin
 bazel-out
 bazel-testlogs
+.idea/
 bazel-fastapi_alembic_demo
+app/__pycache__/
+app/routes/__pycache__/
+.__atomic-*
