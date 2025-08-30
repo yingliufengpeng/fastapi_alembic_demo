@@ -1,4 +1,5 @@
 .clwb/
+.ijwb/
 bazel-bin/
 bazel-out/
 bazel-testlogs/
