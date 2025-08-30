@@ -3,3 +3,7 @@ bazel-bin/
 bazel-out/
 bazel-testlogs/
 bazel-fastapi_alembi_demo/
+bazel-bin
+bazel-out
+bazel-testlogs
+bazel-fastapi_alembic_demo

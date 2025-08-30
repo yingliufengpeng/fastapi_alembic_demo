@@ -43,14 +43,9 @@ py_binary(
 )
 
 py_test(
-    name = "app_server_test",
-    srcs = ["tests/python_basic_test.py"],
-    deps = [":app_lib"],
-)
-
-py_test(
     name = "python_basic_test",
     srcs = ["tests/python_basic_test.py"],
+    main = "tests/python_basic_test.py",
     deps = [":app_lib"],
 )
 
