@@ -26,7 +26,7 @@ def read_users(
     offset: int = 0,
     limit: Annotated[int, Query(le=100)] = 100,
 ) -> list[User]:
-    # breakpoint()
+    breakpoint()
     users = session.exec(select(User).offset(offset).limit(limit)).all()
     return users
 

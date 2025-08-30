@@ -1,4 +1,4 @@
-load("@rules_python//python:defs.bzl", "py_library", "py_binary", "py_test")
+load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
 load("@rules_python//python:pip.bzl", "compile_pip_requirements")
 
 compile_pip_requirements(
@@ -7,51 +7,64 @@ compile_pip_requirements(
     requirements_txt = "requirements_lock_3_12.txt",
 )
 
- 
-
 py_library(
     name = "app_lib",
     srcs = glob(["app/**/*.py"]),
+    imports = ["."],
     deps = [
-        "@py_deps//fastapi",  # pip deps
-        "@py_deps//uvicorn",  # pip deps
         "@py_deps//alembic",  # pip deps
+        "@py_deps//fastapi",  # pip deps
         "@py_deps//sqlalchemy",  # pip deps
         "@py_deps//sqlmodel",  # pip deps
+        "@py_deps//uvicorn",  # pip deps
     ],
-
-   imports = ['.'],
 )
 
 py_binary(
     name = "app_server",
-    main = 'app/main.py',
-    data = [  ],
     srcs = ["app/main.py"],
+    data = [],
+    imports = ["."],
+    main = "app/main.py",
     deps = [
         ":app_lib",
-        
     ],
-   imports = ['.'],
+)
+
+py_binary(
+    name = "demo_server",
+    srcs = ["start.py"],
+    data = [],
+    imports = ["."],
+    main = "start.py",
+    deps = [
+        #        ":app_lib",
+    ],
+)
+
+py_test(
+    name = "app_server_test",
+    srcs = ["tests/python_basic_test.py"],
+    deps = [":app_lib"],
 )
 
 py_test(
     name = "python_basic_test",
     srcs = ["tests/python_basic_test.py"],
-    deps = [":basic_lib"],
+    deps = [":app_lib"],
 )
-
 
 py_binary(
     name = "migrate",
-    data = ["alembic.ini", "alembic",],  # ✅ 确保配置文件和迁移脚本目录被打包
-
-    main = "tools/alembic_runner.py",
     srcs = ["tools/alembic_runner.py"],
+    data = [
+        "alembic",
+        "alembic.ini",
+    ],  # ✅ 确保配置文件和迁移脚本目录被打包
+    main = "tools/alembic_runner.py",
     deps = [
         ":app_lib",
         "@py_deps//alembic",
         "@py_deps//sqlmodel",
     ],
 )
-

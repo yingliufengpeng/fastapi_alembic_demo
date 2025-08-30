@@ -1,3 +1,11 @@
 
 #build --action_env=http_proxy=http://127.0.0.1:10811
 #build --action_env=https_proxy=http://127.0.0.1:10811
+
+build --action_env=http_proxy=http://192.168.9.201:10811
+build --action_env=https_proxy=http://192.168.9.201:10811
+
+
+
+ 
+ 
