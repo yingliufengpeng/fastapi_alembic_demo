@@ -6,5 +6,6 @@ sqlmodel
 jose
 anyio
 passlib
+aiosqlite
 fastapi-users
 pytest>=8.3.2

@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlmodel import Session, select
 
-from .db import get_session, engine
+from .db import get_session, AsyncSessionLocal
 from .models import User, APIKey, SQLModel
 from .auth import (
     authenticate_user,
@@ -23,19 +23,26 @@ admin = FastAPI()
 admin.include_router(routes.admin, tags=['Admin'])
 
 @app.on_event("startup")
-def on_startup():
-    # alembic 负责建表迁移，不再这里自动创建
-    with Session(engine) as session:
-        # 初始化数据
-        if not session.exec(select(User)).first():
+async def on_startup():
+    async with AsyncSessionLocal() as session:
+        # breakpoint()
+        result = await session.execute(select(User))
+        if not result.scalars().first():
             user = User(username="alice", hashed_password=get_password_hash("secret"), secret_name='aa')
             session.add(user)
 
-        if not session.exec(select(APIKey)).first():
-            api_key = APIKey(key="partner-token-123", owner="PartnerA")
-            session.add(api_key)
+            # 查询 APIKey
+        result = await session.execute(select(APIKey))
+        api_key = result.scalars().first()
+        if not api_key:
+            session.add(APIKey(
+                key="partner-token-123",
+                owner="PartnerA"
+            ))
 
-        session.commit()
+        # 提交事务
+        await session.commit()
+
 
 
 @app.post("/token")
