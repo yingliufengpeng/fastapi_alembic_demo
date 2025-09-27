@@ -1,4 +1,5 @@
 import uuid
+import random
 from fastapi.security import OAuth2PasswordBearer, SecurityScopes
 
 from datetime import datetime, timedelta
@@ -56,6 +57,12 @@ async def get_current_user(
                            session: AsyncSession = Depends(get_session),
                            ):
     print(f'security scopes ', security_scopes.scopes)
+    print(f'token ', token)
+    if random.randint(1, 9) == 4:
+        raise HTTPException(
+            status_code=403,
+            detail=f"Missing required scope: {security_scopes.scopes}"
+        )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
