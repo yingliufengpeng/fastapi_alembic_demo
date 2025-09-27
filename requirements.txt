@@ -4,6 +4,7 @@ sqlalchemy
 alembic
 sqlmodel
 jose
+anyio
 passlib
 fastapi-users
 pytest>="8.3.2"

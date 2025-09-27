@@ -12,9 +12,10 @@ from .auth import (
     get_api_key,
 )
 
+from . import routes
 
 app = FastAPI()
-
+app.include_router(routes.about, tags=['About'])
 
 @app.on_event("startup")
 def on_startup():
