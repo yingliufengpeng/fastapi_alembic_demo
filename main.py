@@ -6,15 +6,15 @@ import threading
 import asyncio
 import uvicorn
 
-async def run_server(port):
-    config = uvicorn.Config("app.app:app", host="0.0.0.0", port=port, reload=False)
+async def run_server(app_str, port):
+    config = uvicorn.Config(app_str, host="0.0.0.0", port=port, reload=False)
     server = uvicorn.Server(config)
     await server.serve()
 
 async def main():
     async with anyio.create_task_group() as tg:
-        tg.start_soon(run_server, 8000)
-        tg.start_soon(run_server, 9000)
+        tg.start_soon(run_server, 'app.app:app',8000)
+        tg.start_soon(run_server, 'app.app:admin', 9000)
 
 if __name__ == "__main__":
     anyio.run(main)

@@ -17,6 +17,10 @@ from . import routes
 app = FastAPI()
 app.include_router(routes.about, tags=['About'])
 
+
+admin = FastAPI()
+admin.include_router(routes.admin, tags=['Admin'])
+
 @app.on_event("startup")
 def on_startup():
     # alembic 负责建表迁移，不再这里自动创建
