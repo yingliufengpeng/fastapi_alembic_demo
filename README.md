@@ -1,13 +1,17 @@
 
+# python libs update 
+    bazelisk run //:requirements.update
 
-<!-- bazel run //:migrate -- revision --autogenerate -m "add email" -->
-bazelisk run //:migrate -- revision --autogenerate    -m "add   v"
+# database autogenerate
+    <!-- bazel run //:migrate -- revision --autogenerate -m "add email" -->
+    bazelisk run //:migrate -- revision --autogenerate    -m "add   v"
 
-bazelisk run //:migrate -- upgrade head
+# database migrate
+    bazelisk run //:migrate -- upgrade head
 
 # Windows PowerShell 用：
-$env:HTTP_PROXY="http://127.0.0.1:10809"
-$env:HTTPS_PROXY="http://127.0.0.1:10809"
+    $env:HTTP_PROXY="http://127.0.0.1:10809"
+    $env:HTTPS_PROXY="http://127.0.0.1:10809"
 
 
 

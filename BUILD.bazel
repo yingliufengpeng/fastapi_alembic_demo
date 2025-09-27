@@ -17,30 +17,28 @@ py_library(
         "@py_deps//sqlalchemy",  # pip deps
         "@py_deps//sqlmodel",  # pip deps
         "@py_deps//uvicorn",  # pip deps
+        "@py_deps//fastapi_users",  # pip deps
+        "@py_deps//passlib",  # pip deps
+        "@py_deps//pyjwt",  # pip deps
     ],
 )
 
 py_binary(
     name = "app_server",
-    srcs = ["app/main.py"],
+    srcs = ["main.py"],
     args = [
     ],
     data = [],
     imports = ["."],
-    main = "app/main.py",
+    main = "main.py",
     deps = [
         ":app_lib",
+        "@py_deps//uvicorn",
+
     ],
 )
 
-#sh_binary(
-#    name = "sh_app_server",
-#    srcs = ["run_uvicorn.sh"],
-#    data = [
-#        ":app_lib",
-#        ":app_server",
-#    ],
-#)
+
 
 py_binary(
     name = "demo_server",
@@ -77,5 +75,6 @@ py_binary(
         ":app_lib",
         "@py_deps//alembic",
         "@py_deps//sqlmodel",
+        "@py_deps//fastapi_users",  # pip deps
     ],
 )

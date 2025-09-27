@@ -3,4 +3,7 @@ uvicorn
 sqlalchemy
 alembic
 sqlmodel
-pytest = "^8.3.2"  
+jose
+passlib
+fastapi-users
+pytest>="8.3.2"
