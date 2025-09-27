@@ -7,4 +7,4 @@ jose
 anyio
 passlib
 fastapi-users
-pytest>="8.3.2"
+pytest>=8.3.2
