@@ -2,6 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlmodel import Session, select
 from contextlib import asynccontextmanager
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 from .db import get_session, AsyncSessionLocal
 from .models import User, APIKey, SQLModel
@@ -55,7 +56,7 @@ async def on_startup():
 
 
 @app.post("/token")
-async def login(form_data: OAuth2PasswordRequestForm = Depends(), session: Session = Depends(get_session)):
+async def login(form_data: OAuth2PasswordRequestForm = Depends(), session: AsyncSession = Depends(get_session)):
     user = await authenticate_user(form_data.username, form_data.password, session)
     if not user:
         raise HTTPException(status_code=400, detail="Invalid credentials")
@@ -64,9 +65,6 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), session: Sessi
     return {"access_token": token, "token_type": "bearer"}
 
 
-@app.get("/user-data")
-async def read_user_data(user: User = Depends(get_current_user)):
-    return {"msg": f"Hello {user.username}, protected user data"}
 
 
 @app.get("/external-data", tags=["External"])

@@ -4,6 +4,8 @@ import uuid
 from typing import Annotated
 from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
+from fastapi import Security
+from fastapi.security import OAuth2PasswordBearer, SecurityScopes
 
 from sqlmodel.ext.asyncio.session import AsyncSession
 
@@ -14,12 +16,42 @@ from fastapi import Depends, FastAPI, HTTPException, Query
 from sqlmodel import Field, Session, SQLModel, create_engine, select
 
 router = APIRouter()
-
-from app.db import get_session
+from ..auth import get_current_user
+from ..db import get_session
 
 SessionDep = Annotated[AsyncSession, Depends(get_session)]
+oauth2_scheme = OAuth2PasswordBearer(
+    tokenUrl="token",
+    scopes={"read": "Read access", "write": "Write access"}
+)
 
+# async def get_current_user(
+#         session: SessionDep,
+#         security_scopes: SecurityScopes,  # 注入 SecurityScopes
+#         token: str = Depends(oauth2_scheme)
+# ) -> User:
+#     # 假设我们解码 token 得到 scopes 列表
+#     # token_scopes = decode_token_scopes(token)  # 自己实现
+#     token_scopes = []
+#     for scope in security_scopes.scopes:
+#         if scope not in token_scopes:
+#             raise HTTPException(
+#                 status_code=403,
+#                 detail=f"Missing required scope: {scope}"
+#             )
+#     result = await session.execute(select(User).all())
+#     user = result.scalars().first()
+#     return user
 
+@router.get("/user-data")
+async def read_user_data(user: User = Depends(get_current_user)):
+    return {"msg": f"Hello {user.username}, protected user data"}
+
+@router.get("/users/me")
+async def read_own_user(
+        current_user = Security(get_current_user, scopes=["read"])
+):
+    return current_user
 
 @router.get("/users/")
 async def read_users(

@@ -1,4 +1,6 @@
 import uuid
+from fastapi.security import OAuth2PasswordBearer, SecurityScopes
+
 from datetime import datetime, timedelta
 from fastapi import Depends, HTTPException, Security
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm, APIKeyHeader, HTTPAuthorizationCredentials, HTTPBearer
@@ -48,7 +50,12 @@ async def authenticate_user(username: str, password: str, session: AsyncSession)
     return user
 
 
-async def get_current_user(token: str = Depends(oauth2_scheme), session: AsyncSession = Depends(get_session)):
+async def get_current_user(
+        security_scopes: SecurityScopes,
+        token: str = Depends(oauth2_scheme),
+                           session: AsyncSession = Depends(get_session),
+                           ):
+    print(f'security scopes ', security_scopes.scopes)
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
