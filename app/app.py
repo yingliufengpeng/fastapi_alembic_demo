@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlmodel import Session, select
+from contextlib import asynccontextmanager
 
 from .db import get_session, AsyncSessionLocal
 from .models import User, APIKey, SQLModel
@@ -19,7 +20,15 @@ app.include_router(routes.about, tags=['About'])
 app.include_router(routes.user, tags=['User'])
 
 
-admin = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup 逻辑
+    print("Application startup", flush=True)
+    yield
+    # Shutdown 逻辑
+    print("Application shutdown", flush=True)
+
+admin = FastAPI(lifespan=lifespan)
 admin.include_router(routes.admin, tags=['Admin'])
 
 @app.on_event("startup")
