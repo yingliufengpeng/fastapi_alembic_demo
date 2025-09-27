@@ -16,6 +16,7 @@ from . import routes
 
 app = FastAPI()
 app.include_router(routes.about, tags=['About'])
+app.include_router(routes.user, tags=['User'])
 
 
 admin = FastAPI()

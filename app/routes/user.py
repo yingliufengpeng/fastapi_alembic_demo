@@ -1,10 +1,12 @@
 
 from typing import Annotated
 from fastapi import APIRouter, Depends
+from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
- 
+
+import anyio
 from app.models import User
- 
+
 from fastapi import Depends, FastAPI, HTTPException, Query
 from sqlmodel import Field, Session, SQLModel, create_engine, select
 
@@ -25,7 +27,7 @@ def read_users(
 ) -> list[User]:
 
     users = session.exec(select(User).offset(offset).limit(limit)).all()
-    return users
+    return list(users)
 
 # Code below omitted 👇
 
@@ -33,7 +35,7 @@ def read_users(
 # Code above omitted 👆
 
 @router.post("/users/")
-def create_user(user: User, session: SessionDep) -> None:
+def create_user(user: User, session: SessionDep) :
     session.add(user)
     session.commit()
     session.refresh(user)
@@ -50,10 +52,6 @@ def delete_hero(user_id: int, session: SessionDep):
     session.commit()
     return {"ok": True}
 
-# Code above omitted 👆
-
-
-# Code above omitted 👆
 
 @router.patch("/users/{user_id}", response_model=User)
 def update_hero(user_id: int, user: User, session: SessionDep):
@@ -76,6 +74,13 @@ def read_hero(user_id: int, session: SessionDep) -> User:
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
-# Code below omitted 👇
+# 定义一个异步生成器，产生流式数据
+async def number_stream():
+    for i in range(10):
+        await anyio.sleep(1)   # 模拟耗时任务
+        yield f"data: {i}\n"   # 每次返回一条消息（Server-Sent Events 格式）
 
-# Code below omitted 👇
+# 路由返回流式响应
+@router.get("/stream")
+async def stream_numbers():
+    return StreamingResponse(number_stream(), media_type="text/event-stream")
