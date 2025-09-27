@@ -5,7 +5,6 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
 from fastapi import Security
-from fastapi.security import OAuth2PasswordBearer, SecurityScopes
 
 from sqlmodel.ext.asyncio.session import AsyncSession
 
@@ -20,11 +19,6 @@ from ..auth import get_current_user
 from ..db import get_session
 
 SessionDep = Annotated[AsyncSession, Depends(get_session)]
-oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl="token",
-    scopes={"read": "Read access", "write": "Write access"}
-)
-
 
 
 @router.get("/user-data")

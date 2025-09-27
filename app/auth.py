@@ -21,7 +21,11 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(
+    tokenUrl="token",
+    # OAuth2PasswordBearer 的 scopes 参数只是文档用途
+    scopes={"read2": "Read access", "write2": "Write access"}
+)
 api_key_header = APIKeyHeader(name="X-API-Key")
 http_bearer = HTTPBearer()
 
