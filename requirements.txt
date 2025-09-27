@@ -5,6 +5,7 @@ alembic
 sqlmodel
 jose
 anyio
+aiofiles
 passlib
 aiosqlite
 fastapi-users

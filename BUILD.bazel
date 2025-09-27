@@ -21,6 +21,7 @@ py_library(
         "@py_deps//passlib",  # pip deps
         "@py_deps//pyjwt",  # pip deps
         "@py_deps//aiosqlite",  # pip deps
+        "@py_deps//aiofiles",  # pip deps
     ],
 )
 
