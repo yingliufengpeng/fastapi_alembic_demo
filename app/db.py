@@ -2,7 +2,9 @@ from typing import AsyncGenerator
 from sqlmodel import Field, Session, SQLModel, create_engine, select
 from sqlmodel import SQLModel
 # 异步 Engine
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.ext.asyncio import create_async_engine
+from sqlmodel.ext.asyncio.session import AsyncSession
+
 from sqlalchemy.orm import sessionmaker
 
 from pathlib import Path
