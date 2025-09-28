@@ -1,4 +1,6 @@
+from typing import List
 from fastapi import FastAPI, Request
+
 import os
 from fastapi import FastAPI, Header, Request, HTTPException
 from typing import Annotated
@@ -7,6 +9,9 @@ import anyio
 router = APIRouter()
 from fastapi.responses import StreamingResponse
 import aiofiles
+from pathlib import Path
+from fastapi import FastAPI, UploadFile, File, Form
+UPLOAD_DIR = Path(r'/tmp')
 
 @router.get("/download/{filename}")
 async def download_file(request: Request, filename: str,
@@ -50,3 +55,41 @@ async def download_file(request: Request, filename: str,
         headers=headers,
         media_type="application/octet-stream"
     )
+
+
+async def save_file(file: UploadFile, save_path: Path):
+    async with aiofiles.open(save_path, "wb") as out_file:
+        while True:
+            chunk = await file.read(1024 * 1024)  # 1MB chunk
+            print(f'file {file} is processing  ---->  {save_path}', flush=True)
+            if not chunk:
+                break
+            await out_file.write(chunk)
+    await file.seek(0)  # 如果后续还要用
+    return {"filename": file.filename, "saved_to": str(save_path)}
+
+@router.post("/upload-file/")
+async def upload_file(file: UploadFile = File(...)):
+    # 保存到磁盘（异步写法）
+    save_path = UPLOAD_DIR / file.filename
+    # 用异步方式分块写入，防止大文件撑爆内存
+    await save_file(file, save_path)
+
+    return {"filename": file.filename, "content_type": file.content_type, "saved_to": str(save_path)}
+
+
+@router.post("/upload-files/")
+async def upload_file(files: List[UploadFile] = File(...)):
+    # 保存到磁盘（异步写法）
+    async with anyio.create_task_group() as tg:
+        for file in files:
+            save_path = UPLOAD_DIR / file.filename
+            tg.start_soon(save_file,  file, save_path)
+
+
+    return [{
+        "filename": file.filename,
+        "content_type": file.content_type,
+        "saved_to": str(save_path)
+    } for file in files
+    ]
