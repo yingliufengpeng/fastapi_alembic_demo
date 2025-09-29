@@ -52,14 +52,16 @@ py_test(
 
 py_binary(
     name = "py_webstocket",
-    srcs = ["client/web_stocket.py"],
-    main = "client/web_stocket.py",
+    srcs = ["client/web_stocket.py", 'client/__init__.py', 'client/multi_client.py'],
+    main = "client/multi_client.py",
+    imports = ["client"],  # ✅ 告诉 Bazel 在 client 下搜索模块
+
      deps = [
         ":app_lib",
          "@py_deps//websockets",
          "@py_deps//anyio",
 
-        ],
+     ],
 )
 
 py_test(
