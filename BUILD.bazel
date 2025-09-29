@@ -41,21 +41,6 @@ py_binary(
     ],
 )
 
-py_binary(
-    name = "demo_server",
-    srcs = ["start.py"],
-    args = [
-        "-c",
-        "-k",
-        "--load 8",
-    ],
-    data = [],
-    imports = ["."],
-    main = "start.py",
-    deps = [
-        #        ":app_lib",
-    ],
-)
 
 py_test(
     name = "python_basic_test",
