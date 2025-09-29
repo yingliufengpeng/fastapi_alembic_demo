@@ -5,7 +5,6 @@ from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from typing import List
 
 router = APIRouter()
-
 _logger = logging.getLogger(__name__)
 
 def safe_remove(self, conn):
@@ -14,6 +13,19 @@ def safe_remove(self, conn):
         self.active_connections.remove(conn)
     except ValueError:
         pass
+
+async def safe_send(ws: WebSocket, message: str):
+    try:
+        await ws.send_text(message)
+        return True
+    except RuntimeError as e:
+        # starlette 抛的 RuntimeError("Cannot call 'send' once a close message has been sent.")
+        print(f"[SafeSend] runtime error: {e}")
+    except Exception as e:
+        # 理论上可以抓到底层 socket error
+        print(f"[SafeSend] send failed: {e}")
+    return False
+
 
 # 管理 WebSocket 连接
 class ConnectionManager:
@@ -34,12 +46,12 @@ class ConnectionManager:
         # 复制列表，避免迭代中修改
         async def b_impl(conn):
             try:
-                await conn.send_text(message)
+                await safe_send(conn, message)
             except RuntimeError:
                 # 已经关闭，移除
                 safe_remove(self, conn)
             except Exception as e:
-                print(f"广播异常: {e}", flush=True)
+                print(f"广播异常: {e}  exception of client", flush=True)
                 safe_remove(self, conn)
         async with anyio.create_task_group() as tg:
             for conn in self.active_connections[:]:
@@ -60,6 +72,5 @@ async def websocket_endpoint(websocket: WebSocket):
         manager.disconnect(websocket)
         await manager.broadcast("某个用户离开了聊天室")
     except Exception as e:
-        print(f'xxxx', e)
         manager.disconnect(websocket)
         await manager.broadcast("某个用户离开了聊天室")
