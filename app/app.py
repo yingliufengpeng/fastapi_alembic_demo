@@ -15,7 +15,7 @@ from .auth import (
 )
 
 from . import routes
-from .cron import cron_life_span
+from . import cron
 
 
 @asynccontextmanager
@@ -31,7 +31,7 @@ async def lifespan(app: FastAPI):
 async def combined_lifespan(app: FastAPI):
     async with AsyncExitStack() as stack:
         await stack.enter_async_context(lifespan(app))
-        await stack.enter_async_context(cron_life_span(app))
+        await stack.enter_async_context(cron.life_span(app))
         yield
         # 退出时会自动按顺序清理
 

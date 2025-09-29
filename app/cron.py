@@ -19,7 +19,7 @@ def wrapper():
     anyio.run(process)
 
 @asynccontextmanager
-async def cron_life_span(app: FastAPI):
+async def life_span(app: FastAPI):
     # Startup 逻辑
     global scheduler
     print("cron_life_span startup", flush=True)
