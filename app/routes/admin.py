@@ -1,10 +1,10 @@
+import anyio
+
 from typing import Annotated
 from fastapi import APIRouter, Depends
 from fastapi import FastAPI, BackgroundTasks
 
-import anyio
 router = APIRouter()
-import anyio
 
 # 定义一个异步生成器
 async def steps(name: str):

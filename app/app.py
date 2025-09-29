@@ -17,11 +17,6 @@ from .auth import (
 from . import routes
 from .cron import cron_life_span
 
-app = FastAPI()
-app.include_router(routes.about, tags=['About'])
-app.include_router(routes.user, tags=['User'])
-app.include_router(routes.file, tags=['File'])
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -40,7 +35,13 @@ async def combined_lifespan(app: FastAPI):
         yield
         # 退出时会自动按顺序清理
 
-admin = FastAPI(lifespan=lifespan)
+app = FastAPI(lifespan=combined_lifespan)
+app.include_router(routes.about, tags=['About'])
+app.include_router(routes.user, tags=['User'])
+app.include_router(routes.file, tags=['File'])
+app.include_router(routes.cron, tags=['Cron'])
+
+admin = FastAPI()
 admin.include_router(routes.admin, tags=['Admin'])
 
 @app.on_event("startup")
@@ -66,7 +67,7 @@ async def on_startup():
 
 
 
-@app.post("/token")
+@app.post("/token", tags=['Auth'])
 async def login(form_data: OAuth2PasswordRequestForm = Depends(), session: AsyncSession = Depends(get_session)):
     user = await authenticate_user(form_data.username, form_data.password, session)
     if not user:
