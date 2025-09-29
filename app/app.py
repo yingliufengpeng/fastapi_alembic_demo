@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlmodel import Session, select
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager, AsyncExitStack
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from .db import get_session, AsyncSessionLocal
@@ -15,6 +15,7 @@ from .auth import (
 )
 
 from . import routes
+from .cron import cron_life_span
 
 app = FastAPI()
 app.include_router(routes.about, tags=['About'])
@@ -29,6 +30,15 @@ async def lifespan(app: FastAPI):
     yield
     # Shutdown 逻辑
     print("Application shutdown", flush=True)
+
+
+@asynccontextmanager
+async def combined_lifespan(app: FastAPI):
+    async with AsyncExitStack() as stack:
+        await stack.enter_async_context(lifespan(app))
+        await stack.enter_async_context(cron_life_span(app))
+        yield
+        # 退出时会自动按顺序清理
 
 admin = FastAPI(lifespan=lifespan)
 admin.include_router(routes.admin, tags=['Admin'])

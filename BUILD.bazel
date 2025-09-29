@@ -12,16 +12,17 @@ py_library(
     srcs = glob(["app/**/*.py"]),
     imports = ["."],
     deps = [
+        "@py_deps//aiofiles",  # pip deps
+        "@py_deps//aiosqlite",  # pip deps
         "@py_deps//alembic",  # pip deps
+        "@py_deps//apscheduler",  # pip deps
         "@py_deps//fastapi",  # pip deps
-        "@py_deps//sqlalchemy",  # pip deps
-        "@py_deps//sqlmodel",  # pip deps
-        "@py_deps//uvicorn",  # pip deps
         "@py_deps//fastapi_users",  # pip deps
         "@py_deps//passlib",  # pip deps
         "@py_deps//pyjwt",  # pip deps
-        "@py_deps//aiosqlite",  # pip deps
-        "@py_deps//aiofiles",  # pip deps
+        "@py_deps//sqlalchemy",  # pip deps
+        "@py_deps//sqlmodel",  # pip deps
+        "@py_deps//uvicorn",  # pip deps
     ],
 )
 
@@ -35,13 +36,10 @@ py_binary(
     main = "main.py",
     deps = [
         ":app_lib",
-        "@py_deps//uvicorn",
         "@py_deps//anyio",
-
+        "@py_deps//uvicorn",
     ],
 )
-
-
 
 py_binary(
     name = "demo_server",
@@ -77,7 +75,7 @@ py_binary(
     deps = [
         ":app_lib",
         "@py_deps//alembic",
-        "@py_deps//sqlmodel",
         "@py_deps//fastapi_users",  # pip deps
+        "@py_deps//sqlmodel",
     ],
 )

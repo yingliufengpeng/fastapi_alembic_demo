@@ -9,4 +9,5 @@ aiofiles
 passlib
 aiosqlite
 fastapi-users
+apscheduler
 pytest>=8.3.2
