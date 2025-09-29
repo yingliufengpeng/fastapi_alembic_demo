@@ -1,5 +1,5 @@
 fastapi
-uvicorn
+uvicorn[standard]
 sqlalchemy
 alembic
 sqlmodel
@@ -11,3 +11,5 @@ aiosqlite
 fastapi-users
 apscheduler
 pytest>=8.3.2
+websockets
+httpx

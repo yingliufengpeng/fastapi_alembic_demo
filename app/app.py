@@ -40,6 +40,7 @@ app.include_router(routes.about, tags=['About'])
 app.include_router(routes.user, tags=['User'])
 app.include_router(routes.file, tags=['File'])
 app.include_router(routes.cron, tags=['Cron'])
+app.include_router(routes.webstocket, tags=['Webstocket'])
 
 admin = FastAPI()
 admin.include_router(routes.admin, tags=['Admin'])

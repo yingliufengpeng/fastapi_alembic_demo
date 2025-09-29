@@ -39,6 +39,7 @@ py_binary(
         "@py_deps//anyio",
         "@py_deps//uvicorn",
     ],
+
 )
 
 
@@ -47,6 +48,32 @@ py_test(
     srcs = ["tests/python_basic_test.py"],
     main = "tests/python_basic_test.py",
     deps = [":app_lib"],
+)
+
+py_binary(
+    name = "py_webstocket",
+    srcs = ["client/web_stocket.py"],
+    main = "client/web_stocket.py",
+     deps = [
+        ":app_lib",
+         "@py_deps//websockets",
+         "@py_deps//anyio",
+
+        ],
+)
+
+py_test(
+    name = "py_test_websocket",
+    srcs = ["tests/test_websocket.py"],
+    main = "tests/test_websocket.py",
+
+    deps = [
+        ":app_lib",  # 包含 server.py
+        "@py_deps//anyio",
+        "@py_deps//fastapi",
+        "@py_deps//pytest",
+        "@py_deps//httpx",
+    ],
 )
 
 py_binary(
